@@ -1,0 +1,86 @@
+import "@/style.css";
+import "./style.css";
+import {
+  AxesHelper,
+  CameraHelper,
+  GridHelper,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
+import { Sphere } from "./Sphere";
+import * as dat from "dat.gui";
+
+class App {
+  canvas: HTMLCanvasElement;
+  renderer!: WebGLRenderer;
+  camera!: PerspectiveCamera;
+  scene!: Scene;
+  sphere!: Sphere;
+  gui!: dat.GUI;
+
+  constructor(canvas: HTMLCanvasElement) {
+    this.animate = this.animate.bind(this);
+    this.canvas = canvas;
+    this.initRenderer();
+    this.initCamera();
+    this.initScene();
+    this.initHelpers();
+    this.initGUI();
+    this.initObjects();
+    this.animate();
+  }
+
+  initRenderer() {
+    this.renderer = new WebGLRenderer({
+      canvas: this.canvas,
+      alpha: true,
+    });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+  }
+
+  initCamera() {
+    this.camera = new PerspectiveCamera(
+      40,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      200,
+    );
+    this.camera.position.set(0, 2, 7);
+  }
+
+  initScene() {
+    this.scene = new Scene();
+  }
+
+  initHelpers() {
+    const cameraHelper = new CameraHelper(this.camera);
+    this.scene.add(cameraHelper);
+    const gridHelper = new GridHelper(10, 10);
+    this.scene.add(gridHelper);
+    const axesHelper = new AxesHelper(3);
+    this.scene.add(axesHelper);
+  }
+
+  initObjects() {
+    this.sphere = new Sphere(this.gui);
+    this.sphere.mesh.position.y = 2;
+    this.scene.add(this.sphere.mesh);
+  }
+
+  initGUI() {
+    this.gui = new dat.GUI();
+  }
+
+  animate() {
+    this.renderer.render(this.scene, this.camera);
+    requestAnimationFrame(this.animate);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  console.log("loaded");
+  const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+  new App(canvas);
+});
