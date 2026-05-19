@@ -19,7 +19,7 @@ import { Ground } from "./Ground";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import gsap from "gsap";
 import { ThreePerf } from "three-perf";
-import { Panda } from "./Panda";
+import { Rhino } from "./Rhino";
 
 class App {
   canvas: HTMLCanvasElement;
@@ -33,7 +33,7 @@ class App {
   mouse!: Vector2;
   raycaster!: Raycaster;
   perf!: ThreePerf;
-  panda!: Panda;
+  rhino!: Rhino;
 
   constructor(canvas: HTMLCanvasElement) {
     this.onResize = this.onResize.bind(this);
@@ -79,9 +79,10 @@ class App {
     );
     this.camera.position.set(0, 2, 7);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.minAzimuthAngle = 0;
-    this.controls.maxAzimuthAngle = 0;
+    //this.controls.minAzimuthAngle = 0;
+    //this.controls.maxAzimuthAngle = 0;
     this.controls.enableZoom = false;
+    this.controls.enableRotate = false;
   }
 
   initScene() {
@@ -118,24 +119,20 @@ class App {
     this.cube = new Cube(this.gui);
     // this.scene.add(this.cube.mesh);
     this.ground = new Ground(this.gui);
-    this.scene.add(this.ground.mesh);
-    this.panda = new Panda();
-    this.scene.add(this.panda.mesh);
+    // this.scene.add(this.ground.mesh);
+    this.rhino = new Rhino();
+    this.scene.add(this.rhino.mesh);
   }
 
   selectObjects() {
-    let rotation = 0;
     this.mouse = new Vector2();
-    window.addEventListener("click", (event) => {
+    window.addEventListener("mousemove", (event) => {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-      this.raycaster = new Raycaster();
-      this.raycaster.setFromCamera(this.mouse, this.camera);
-      const intersects = this.raycaster.intersectObjects([this.cube.mesh]);
-      if (intersects.length > 0) {
-        rotation += Math.PI * 2;
-        gsap.to(this.cube.mesh.rotation, { duration: 1, y: rotation });
-      }
+      gsap.to(this.rhino.mesh.rotation, {
+        duration: 0.9,
+        y: this.mouse.x * Math.PI * 0.5, // axe y
+      });
     });
   }
 

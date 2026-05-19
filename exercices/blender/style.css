@@ -3,3 +3,14 @@ canvas {
   height: 100dvh;
   /* background: blue; */
 }
+
+.overlay-text {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "UnifrakturMaguntia", cursive;
+  font-size: 10em;
+  color: rgb(255 255 255 / 0.75);
+}
