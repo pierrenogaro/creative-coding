@@ -10,7 +10,6 @@ import {
   Mesh,
   MeshStandardMaterial,
   PCFShadowMap,
-  PCFSoftShadowMap,
   PerspectiveCamera,
   PlaneGeometry,
   Scene,
@@ -18,6 +17,7 @@ import {
   WebGLRenderer,
 } from "three";
 import textureBg from "./texture-bg.jpg";
+import textureMountains from "./pierre-mountains.png";
 import { Cube } from "./Cube";
 import * as dat from "dat.gui";
 import { Ground } from "./Ground";
@@ -95,16 +95,20 @@ class App {
   }
 
   initObjects() {
+    const loader = new TextureLoader();
+    const tex1 = loader.load(textureBg);
+    const tex2 = loader.load(textureMountains);
+    const mat = new MeshStandardMaterial({ map: tex1 });
 
-    // texture (mur) :
-    const texture = new TextureLoader().load(textureBg);
-    const bgPlane = new Mesh(
-      new PlaneGeometry(8, 6),
-      new MeshStandardMaterial({ map: texture }),
-    );
+    const bgPlane = new Mesh(new PlaneGeometry(8, 6), mat);
     bgPlane.position.set(0, 1.5, -8);
     bgPlane.receiveShadow = true;
     this.scene.add(bgPlane);
+
+    this.canvas.addEventListener("click", () => {
+      mat.map = mat.map === tex1 ? tex2 : tex1;
+      mat.needsUpdate = true;
+    });
 
     // 2 devant
     const torus1 = new Cube(this.gui);
