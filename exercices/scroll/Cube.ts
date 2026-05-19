@@ -19,7 +19,7 @@ export class Cube {
     this.mesh.rotation.y = MathUtils.degToRad(45);
 
     this.mesh.castShadow = true;
-    this.mesh.position.y = 0.5;
+    this.mesh.position.set(3, 1.5, 1);
 
     if (import.meta.env.VITE_ENVIRONMENT == "development" && gui) {
       this.gui = gui;
@@ -40,7 +40,8 @@ export class Cube {
 
   scrollEvents() {
     gsap.to(this.mesh.rotation, {
-      y: Math.PI * 2,
+      x: Math.PI * 15,
+      y: Math.PI * 15,
       scrollTrigger: {
         trigger: "main",
         start: "top top",
